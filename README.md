@@ -1,6 +1,6 @@
 # Pacman
 
-Berkeley CS188 Pacman AI projects.
+UVA Pacman AI Project
 
 ## Projects
 
