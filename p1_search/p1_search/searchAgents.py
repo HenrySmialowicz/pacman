@@ -396,8 +396,32 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     # These are the walls of the maze, as a Grid (game.py)
     walls = problem.walls
 
-    "*** YOUR CODE HERE ***"
-    return 0  # Default to trivial solution
+    pos, cornersVisited = state
+    cornersRemaining = [c for c in corners if c not in cornersVisited]
+
+    if not cornersRemaining:
+        return 0
+
+    res = -1
+
+    from util import Queue
+
+    nextNodes = Queue()
+    nextNodes.push((pos, 0))
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+    visited = set()
+    while not nextNodes.isEmpty():
+        loc, depth = nextNodes.pop()
+        visited.add(loc)
+        if loc in cornersRemaining:
+            res = max(res, depth)
+        for dx, dy in directions:
+            newx = loc[0] + dx
+            newy = loc[1] + dy
+            if (newx, newy) not in visited and not walls[newx][newy]:
+                nextNodes.push(((newx, newy), depth+1))
+
+    return res
 
 
 class AStarCornersAgent(SearchAgent):
