@@ -496,6 +496,21 @@ class AStarFoodSearchAgent(SearchAgent):
 
 
 def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
+    position, foodGrid = state
+    foods = foodGrid.asList()
+    distances = problem.heuristicInfo.setdefault('foodDistances', {})
+
+    farthest = 0
+    for food in foods:
+        key = (position, food)
+        if key not in distances:
+            distances[key] = mazeDistance(
+                position, food, problem.startingGameState
+            )
+        farthest = max(farthest, distances[key])
+
+    return farthest
+
     """
     Your heuristic for the FoodSearchProblem goes here.
 
@@ -523,9 +538,6 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
 
 
 class ClosestDotSearchAgent(SearchAgent):
@@ -559,8 +571,10 @@ class ClosestDotSearchAgent(SearchAgent):
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Use the breadth-first search algorithm from search.py to find the shortest path.
+        # Note: You may need to ensure 'search' is imported at the top of your file.
+        import search
+        return search.bfs(problem)
 
 
 class AnyFoodSearchProblem(PositionSearchProblem):
@@ -595,9 +609,8 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         complete the problem definition.
         """
         x, y = state
+        return self.food[x][y]
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
 
 
 def mazeDistance(point1: Tuple[int, int], point2: Tuple[int, int], gameState: pacman.GameState) -> int:
